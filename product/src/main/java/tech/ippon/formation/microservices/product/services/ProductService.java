@@ -1,8 +1,5 @@
 package tech.ippon.formation.microservices.product.services;
 
-import feign.Feign;
-import feign.gson.GsonDecoder;
-import feign.gson.GsonEncoder;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
