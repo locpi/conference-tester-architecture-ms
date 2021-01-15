@@ -9,8 +9,8 @@ import tech.ippon.formation.microservices.product.configuration.ApplicationPrope
 @EnableConfigurationProperties({ApplicationProperties.class})
 public class ProductApplication {
 
-  public static void main(String[] args) {
-    SpringApplication.run(ProductApplication.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(ProductApplication.class, args);
+    }
 
 }
