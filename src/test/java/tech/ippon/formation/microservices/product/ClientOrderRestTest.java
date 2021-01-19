@@ -11,13 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.testcontainers.containers.GenericContainer;
-import tech.ippon.formation.microservices.product.domain.CommandeClient;
-import tech.ippon.formation.microservices.product.historiqueCommande.service.CommandeClientRedisService;
-import tech.ippon.formation.microservices.product.web.CommandeClientRest;
+import tech.ippon.formation.microservices.order.domain.ClientOrder;
+import tech.ippon.formation.microservices.orderHistory.service.ClientOrderHistoryService;
+import tech.ippon.formation.microservices.order.web.ClientOrderController;
 
 @SpringBootTest
 @ActiveProfiles("test")
-class CommandeClientRestTest {
+class ClientOrderRestTest {
 
     /**
      * URL connexion à active MQ
@@ -40,13 +40,13 @@ class CommandeClientRestTest {
      * Composant à tester
      */
     @Autowired
-    private CommandeClientRest commandeClientRest;
+    private ClientOrderController clientOrderController;
 
     /**
      * Composant à tester
      */
     @Autowired
-    private CommandeClientRedisService commandeClientRedisService;
+    private ClientOrderHistoryService commandeClientRedisService;
 
     @BeforeAll
     public static void before() throws Exception {
@@ -64,10 +64,14 @@ class CommandeClientRestTest {
 
     @Test
     public void testPourCreationCommandeOk(){
-        CommandeClient co = new CommandeClient("client1","produit1");
-        commandeClientRest.creerCommande(co);
+        ClientOrder co = new ClientOrder("client1","produit1");
+        clientOrderController.creerCommande(co);
         Assertions.assertNotNull(commandeClientRedisService.getById("id-client1"));
     }
 
+    @Test
+    public void testPourCreationCommandeLecture() throws Exception {
+        Assertions.assertNotNull(commandeClientRedisService.getById("id-client1"));
+    }
 
 }

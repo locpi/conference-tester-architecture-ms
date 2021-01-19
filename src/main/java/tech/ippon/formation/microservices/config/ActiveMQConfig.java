@@ -1,4 +1,4 @@
-package tech.ippon.formation.microservices.product.configuration;
+package tech.ippon.formation.microservices.config;
 
 import java.util.Arrays;
 import javax.jms.ConnectionFactory;

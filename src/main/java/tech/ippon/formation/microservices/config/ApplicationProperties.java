@@ -1,4 +1,4 @@
-package tech.ippon.formation.microservices.product.configuration;
+package tech.ippon.formation.microservices.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

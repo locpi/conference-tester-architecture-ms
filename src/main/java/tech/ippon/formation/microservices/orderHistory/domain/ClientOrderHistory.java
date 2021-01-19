@@ -1,11 +1,11 @@
-package tech.ippon.formation.microservices.product.historiqueCommande.domain;
+package tech.ippon.formation.microservices.orderHistory.domain;
 
 import java.util.Date;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 
 @RedisHash
-public class HistoriqueCommandeProduitClient {
+public class ClientOrderHistory {
 
     @Id
     private String id;
@@ -16,7 +16,7 @@ public class HistoriqueCommandeProduitClient {
 
     private Date dateReception = new Date();
 
-    public HistoriqueCommandeProduitClient( String idClient, String idProduit) {
+    public ClientOrderHistory( String idClient, String idProduit) {
         this.id = id;
         this.idClient = idClient;
         this.idProduit = idProduit;

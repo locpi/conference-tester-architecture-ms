@@ -1,9 +1,10 @@
-package tech.ippon.formation.microservices.product.configuration;
+package tech.ippon.formation.microservices.product.config;
 
 import feign.Feign;
 import feign.gson.GsonDecoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import tech.ippon.formation.microservices.config.ApplicationProperties;
 import tech.ippon.formation.microservices.product.client.StockClient;
 
 @Configuration

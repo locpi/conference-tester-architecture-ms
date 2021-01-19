@@ -1,15 +1,15 @@
-package tech.ippon.formation.microservices.product.domain;
+package tech.ippon.formation.microservices.order.domain;
 
 
 import java.io.Serializable;
 
-public class CommandeClient implements Serializable {
+public class ClientOrder implements Serializable {
 
     private String idClient;
 
     private String idProduit;
 
-    public CommandeClient(String idClient, String idProduit) {
+    public ClientOrder(String idClient, String idProduit) {
         this.idClient = idClient;
         this.idProduit = idProduit;
     }
