@@ -1,12 +1,9 @@
 package tech.ippon.formation.microservices.product;
 
-import java.util.Arrays;
+
 import org.apache.activemq.broker.BrokerService;
 import org.junit.Rule;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -14,6 +11,8 @@ import org.testcontainers.containers.GenericContainer;
 import tech.ippon.formation.microservices.order.domain.ClientOrder;
 import tech.ippon.formation.microservices.orderHistory.service.ClientOrderHistoryService;
 import tech.ippon.formation.microservices.order.web.ClientOrderController;
+
+import java.util.Arrays;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -63,14 +62,16 @@ class ClientOrderRestTest {
     }
 
     @Test
-    public void testPourCreationCommandeOk(){
+    @Order(1)
+    public void test1() throws InterruptedException {
         ClientOrder co = new ClientOrder("client1","produit1");
         clientOrderController.creerCommande(co);
-        Assertions.assertNotNull(commandeClientRedisService.getById("id-client1"));
+        Thread.sleep(5000);
     }
 
     @Test
-    public void testPourCreationCommandeLecture() throws Exception {
+    @Order(2)
+    public void test2() throws Exception {
         Assertions.assertNotNull(commandeClientRedisService.getById("id-client1"));
     }
 
