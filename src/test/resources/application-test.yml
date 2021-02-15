@@ -1,7 +1,7 @@
 spring:
   redis:
     host: localhost
-    port: 10874
+    port: 6379
 application:
   stock-url: http://localhost:12345/
   broker-url: tcp://localhost:3333

@@ -1,27 +1,34 @@
 package tech.ippon.formation.microservices.product;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.activemq.broker.BrokerService;
 import org.junit.Rule;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.MockMvc;
 import org.testcontainers.containers.GenericContainer;
 import tech.ippon.formation.microservices.order.domain.ClientOrder;
 import tech.ippon.formation.microservices.orderHistory.service.ClientOrderHistoryService;
-import tech.ippon.formation.microservices.order.web.ClientOrderController;
 
-import java.util.Arrays;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
+
 @ActiveProfiles("test")
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@AutoConfigureMockMvc
 class ClientOrderRestTest {
 
     /**
      * URL connexion à active MQ
      */
     private static final String BROKER_ACTIVE_MQ = "tcp://localhost:3333";
+    public static final String API_ORDERS = "/api/orders";
 
     /**
      * BROKER Active MQ Embeded
@@ -35,44 +42,53 @@ class ClientOrderRestTest {
     @Rule
     static GenericContainer redis = new GenericContainer("redis:3.0.6");
 
-    /**
-     * Composant à tester
-     */
-    @Autowired
-    private ClientOrderController clientOrderController;
-
-    /**
-     * Composant à tester
-     */
     @Autowired
     private ClientOrderHistoryService commandeClientRedisService;
 
+    @Autowired
+    private MockMvc mockMvc;
+
+
     @BeforeAll
     public static void before() throws Exception {
-        redis.setPortBindings(Arrays.asList("10874:6379"));
         redis.start();
         broker.addConnector(BROKER_ACTIVE_MQ);
         broker.start();
     }
 
+    @Test
+    @Order(1)
+    public void test1() throws Exception {
+        ClientOrder co = new ClientOrder("client1", "produit1");
+        this.mockMvc.perform(
+                post(API_ORDERS)
+                        .content(asJsonString(co))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andReturn();
+    }
+
+
+    @Test
+    @Order(2)
+    public void test2() {
+        broker.checkQueueSize("client_order");
+        Assertions.assertNotNull(commandeClientRedisService.getById("id-client1"));
+    }
+
+    public static String asJsonString(final Object obj) {
+        try {
+            return new ObjectMapper().writeValueAsString(obj);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
     @AfterAll
     public static void after() throws Exception {
         redis.stop();
         broker.stop();
-    }
-
-    @Test
-    @Order(1)
-    public void test1() throws InterruptedException {
-        ClientOrder co = new ClientOrder("client1","produit1");
-        clientOrderController.creerCommande(co);
-        Thread.sleep(5000);
-    }
-
-    @Test
-    @Order(2)
-    public void test2() throws Exception {
-        Assertions.assertNotNull(commandeClientRedisService.getById("id-client1"));
     }
 
 }
