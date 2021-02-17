@@ -57,8 +57,7 @@ class ClientOrderRestTest {
     }
 
     @Test
-    @Order(1)
-    public void test1() throws Exception {
+    public void testCreationCommandClientIsOK() throws Exception {
         ClientOrder co = new ClientOrder("client1", "produit1");
         this.mockMvc.perform(
                 post(API_ORDERS)
@@ -66,14 +65,14 @@ class ClientOrderRestTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
-    }
-
-
-    @Test
-    @Order(2)
-    public void test2() {
         broker.checkQueueSize("client_order");
         Assertions.assertNotNull(commandeClientRedisService.getById("id-client1"));
+    }
+
+    @AfterAll
+    public static void after() throws Exception {
+        redis.stop();
+        broker.stop();
     }
 
     public static String asJsonString(final Object obj) {
@@ -82,13 +81,6 @@ class ClientOrderRestTest {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-    }
-
-
-    @AfterAll
-    public static void after() throws Exception {
-        redis.stop();
-        broker.stop();
     }
 
 }
