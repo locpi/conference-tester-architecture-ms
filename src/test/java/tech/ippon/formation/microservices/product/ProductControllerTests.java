@@ -28,12 +28,14 @@ import tech.ippon.formation.microservices.product.domain.Stock;
 @AutoConfigureMockMvc
 class ProductControllerTests {
 
-  @Autowired private WireMockServer wireMockServer;
+  @Autowired
+  private WireMockServer wireMockServer;
 
-  @Autowired private MockMvc mockMvc;
+  @Autowired
+  private MockMvc mockMvc;
 
   @Test
-  void testGetAllTodosShouldReturnDataFromClient() throws Exception {
+  void getProduct_WithStock_ShouldGetProductWithStock() throws Exception {
     ObjectMapper objectMapper = new ObjectMapper();
     this.wireMockServer.stubFor(
         WireMock.get(urlPathEqualTo("/api/stocks"))
